@@ -3,8 +3,6 @@ var Socket = require("./socket");
 
 module.exports = class Client {
 	constructor(options = {}) {
-		super();
-
 		this.options = options;
 
 		this.connected = false;
