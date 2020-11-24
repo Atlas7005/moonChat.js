@@ -16,7 +16,9 @@ module.exports = class Client {
 			if(room) {
 				this.room = room;
 				this.connected = true;
-				Socket.load(cb == null ? null : cb);
+				this.getPrivateUser(this.id, body => {
+					Socket.load(cb == null ? null : cb);
+				});
 			} else {
 				cb(new Error("Missing room parameter"));
 			}
@@ -37,11 +39,11 @@ module.exports = class Client {
 		Rest.sendMessage(this.id, this.room, message, cb == null ? null : cb);
 	};
 
-	getPublicUser(name, cb = null) {
-		Rest.getPublicUser(name, cb == null ? null : cb);
+	getPublicUser(name) {
+		return Rest.getPublicUser(name, body => body);
 	};
 
-	getPrivateUser(id = this.id, cb = null) {
-		Rest.getPrivateUser(id, cb == null ? null : cb);
+	getPrivateUser(id = this.id) {
+		return Rest.getPrivateUser(id, body => body);
 	};
 };
