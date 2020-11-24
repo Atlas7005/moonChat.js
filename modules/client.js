@@ -12,7 +12,7 @@ module.exports = class Client {
 		if(id) {
 			if(room) {
 				this.connected = true;
-				Socket.load(cb());
+				Socket.load(cb);
 			} else {
 				cb(new Error("Missing room parameter"));
 			}
