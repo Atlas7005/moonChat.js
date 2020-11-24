@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "eventemitter3": "^4.0.7",
     "socket.io-client": "^3.0.3"
   },
   "devDependencies": {},
