@@ -40,10 +40,14 @@ module.exports = class Client {
 	};
 
 	getPublicUser(name) {
-		return Rest.getPublicUser(name, body => body);
+		return Rest.getPublicUser(name, body => {
+			return body;
+		});
 	};
 
 	getPrivateUser(id = this.id) {
-		return Rest.getPrivateUser(id, body => body);
+		return Rest.getPrivateUser(id, body => {
+			return body;
+		});
 	};
 };
