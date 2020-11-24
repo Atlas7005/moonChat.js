@@ -1,10 +1,8 @@
 var SIO = require("socket.io-client");
 var EventEmitter = require("eventemitter3");
 	
-module.exports = class Socket extends EventEmitter {
+module.exports = class Socket {
 	constructor(options = {}) {
-		super();
-
 		this.options = options;
 
 		this.load();
