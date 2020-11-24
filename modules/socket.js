@@ -1,13 +1,7 @@
 var SIO = require("socket.io-client");
 var EventEmitter = require("eventemitter3");
 	
-module.exports = class Socket {
-	constructor(options = {}) {
-		this.options = options;
-
-		this.load();
-	};
-
+module.exports = {
 	load(cb = null) {
 		this.socket = SIO("https://chat.twplayer.co");
 		cb();
@@ -28,4 +22,4 @@ module.exports = class Socket {
 			this.socket.on(`${room}-admin`, cb);
 		}
 	};
-}; 
+};

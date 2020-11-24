@@ -1,7 +1,7 @@
 var EventEmitter = require("eventemitter3");
 var Socket = require("./socket");
 
-module.exports = class Client extends EventEmitter {
+module.exports = class Client {
 	constructor(options = {}) {
 		super();
 
