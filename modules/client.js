@@ -1,4 +1,3 @@
-var EventEmitter = require("eventemitter3");
 var Socket = require("./socket");
 
 module.exports = class Client {

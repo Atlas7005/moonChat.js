@@ -1,5 +1,4 @@
 var SIO = require("socket.io-client");
-var EventEmitter = require("eventemitter3");
 	
 module.exports = {
 	load(cb = null) {
