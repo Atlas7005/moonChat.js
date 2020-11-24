@@ -5,7 +5,7 @@ module.exports = {
 	load(cb = null) {
 		this.socket = SIO("https://chat.twplayer.co");
 		cb();
-	};
+	},
 
 	onMessage(room, cb) {
 		if(this.socket == null) {
@@ -13,7 +13,7 @@ module.exports = {
 		} else {
 			this.socket.on(`${room}-message`, cb);
 		}
-	};
+	},
 
 	onAdmin(room, cb) {
 		if(this.socket == null) {
@@ -21,5 +21,5 @@ module.exports = {
 		} else {
 			this.socket.on(`${room}-admin`, cb);
 		}
-	};
+	}
 };
