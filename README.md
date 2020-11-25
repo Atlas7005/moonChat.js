@@ -1,5 +1,5 @@
 # moonChat.js
-Node.js library for moonChat.
+Node.js library for [moonChat](https://chat.twplayer.co/).
 
 ## Example
 ```js
