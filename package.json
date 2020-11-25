@@ -11,7 +11,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "socket",
+    "moonchat",
+    "mc",
+    "chat",
+    "socket.io",
+    "bot",
+    "chatting",
+    "application",
+    "website",
+    "zoomer"
+  ],
   "author": "Atlas <atlas@twplayer.co> (https://chat.twplayer.co)",
   "license": "Apache-2.0",
   "repository": {
