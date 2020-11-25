@@ -1,8 +1,3 @@
-# moonChat.js
-Node.js library for moonChat.
-
-## Example
-```js
 var { Client } = require("moonchat.js");
 var client = new Client();
 
@@ -13,4 +8,3 @@ client.connect("somevaliduserid", "atlas", user => {
 client.onMessage("atlas", (sender, message, color) => {
 	console.log(`${sender.replace(/<[^>]*>?/gm, "")}: ${message}`);
 });
-```
