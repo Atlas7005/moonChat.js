@@ -16,6 +16,12 @@ module.exports = class Client {
 		this.room = null;
 	};
 
+	_exit() {
+		this.leave(this.id, this.room, () => {
+			process.exit();
+		});
+	};
+
 	/**
 	 * @callback callback
 	 * @param {(Object|Error)} response
@@ -35,12 +41,18 @@ module.exports = class Client {
 	 */
 	connect(id, room, cb = null) {
 		if(id) {
-			this.id = id;
 			if(room) {
+				this.id = id;
 				this.room = room;
 				this.connected = true;
 				Socket.load(() => {
 					this.getPrivateUser(this.id, body => cb == null ? null : cb(body.user));
+					this.join(this.id, this.room);
+					process.on("exit", () => this._exit());
+					process.on("SIGINT", () => this._exit());
+					process.on("SIGUSR1", () => this._exit());
+					process.on("SIGUSR2", () => this._exit());
+					process.on("uncaughtException", () => this._exit());
 				});
 			} else {
 				cb(new Error("Missing room parameter"));
@@ -107,4 +119,25 @@ module.exports = class Client {
 	getPrivateUser(id = this.id, cb = null) {
 		Rest.getPrivateUser(id, cb == null ? null : cb);
 	};
+
+	/**
+	 * @function Client#join
+	 * @param {String} id - The id of the user you want to join a room with.
+	 * @param {String} room - The room name you wanna join.
+	 * @param {callback} cb - The callback with either an error or response.
+	 */
+	join(id = this.id, room = this.room, cb = null) {
+		Rest.join(id, room, cb == null ? null : cb);
+	};
+
+	/**
+	 * @function Client#leave
+	 * @param {String} id - The id of the user you want to leave a room with.
+	 * @param {String} room - The room name you wanna leave.
+	 * @param {callback} cb - The callback with either an error or response.
+	 */
+	leave(id = this.id, room = this.room, cb = null) {
+		Rest.leave(id, room, cb == null ? null : cb);
+	};
+
 };

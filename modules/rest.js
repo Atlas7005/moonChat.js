@@ -47,5 +47,41 @@ module.exports = {
 				cb == null ? null : cb(body);
 			}
 		);
+	},
+
+	join(id, room, cb = null) {
+		request(
+			{
+				url: `${baseUrl}/api/rooms/join`,
+				method: "POST",
+				body: {
+					id,
+					room
+				},
+				json: true
+			},
+			(err, res, body) => {
+				if(err) return cb == null ? null : cb(new Error(err));
+				cb == null ? null : cb(body);
+			}
+		);
+	},
+
+	leave(id, room, cb = null) {
+		request(
+			{
+				url: `${baseUrl}/api/rooms/leave`,
+				method: "POST",
+				body: {
+					id,
+					room
+				},
+				json: true
+			},
+			(err, res, body) => {
+				if(err) return cb == null ? null : cb(new Error(err));
+				cb == null ? null : cb(body);
+			}
+		);
 	}
 };
