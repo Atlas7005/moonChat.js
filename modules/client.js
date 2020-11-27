@@ -1,4 +1,4 @@
-var Socket = require("./socket");
+var { Socket } = require("./socket");
 var Rest = require("./rest");
 
 /**
@@ -14,12 +14,14 @@ module.exports = class Client {
 		this.connected = false;
 		this.id = null;
 		this.room = null;
+
+		this.socket = null;
 	};
 
 	_exit() {
-		this.leave(this.id, this.room, () => {
-			process.exit();
-		});
+		if(this !== null) {
+			this.leave(this.id, this.room);
+		}
 	};
 
 	/**
@@ -45,15 +47,14 @@ module.exports = class Client {
 				this.id = id;
 				this.room = room;
 				this.connected = true;
-				Socket.load(() => {
-					this.getPrivateUser(this.id, body => cb == null ? null : cb(body.user));
-					this.join(this.id, this.room);
-					process.on("exit", () => this._exit());
-					process.on("SIGINT", () => this._exit());
-					process.on("SIGUSR1", () => this._exit());
-					process.on("SIGUSR2", () => this._exit());
-					process.on("uncaughtException", () => this._exit());
-				});
+				this.socket = new Socket();
+				this.getPrivateUser(this.id, body => cb == null ? null : cb(body.user));
+				this.join(this.id, this.room);
+				process.on("exit", this._exit.bind(null));
+				process.on("SIGINT", this._exit.bind(null));
+				process.on("SIGUSR1", this._exit.bind(null));
+				process.on("SIGUSR2", this._exit.bind(null));
+				process.on("uncaughtException", this._exit.bind(null));
 			} else {
 				cb(new Error("Missing room parameter"));
 			}
@@ -63,12 +64,25 @@ module.exports = class Client {
 	};
 
 	/**
+	 * @function Client#disconnect
+	 * @param {callback} cb - The callback called when disconnected.
+	 */
+	disconnect(cb = null) {
+		this.leave(this.id, this.room, () => {
+			this.connected = false;
+			this.id = null;
+			this.room = null;
+			this.socket.unload(() => cb == null ? null : cb());
+		});
+	};
+
+	/**
 	 * @function Client#onMessage
 	 * @param {String} room - The room name to listen for.
 	 * @param {callback} cb - The callback called when message is received.
 	 */
 	onMessage(room = this.room, cb = null) {
-		Socket.onMessage(room, cb == null ? null : cb);
+		this.socket.onMessage(room, cb == null ? null : cb);
 	};
 
 	/**
@@ -77,7 +91,7 @@ module.exports = class Client {
 	 * @param {callback} cb - The callback called when message is received.
 	 */
 	onAdmin(room = this.room, cb = null) {
-		Socket.onAdmin(room, cb == null ? null : cb);
+		this.socket.onAdmin(room, cb == null ? null : cb);
 	};
 
 	/**
