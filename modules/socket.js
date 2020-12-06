@@ -26,4 +26,5 @@ module.exports.Socket = class Socket {
 			this.socket.on(`${room}-admin`, cb == null ? null : cb);
 		}
 	};
+
 };

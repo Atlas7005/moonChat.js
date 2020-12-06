@@ -16,12 +16,8 @@ module.exports = class Client {
 		this.room = null;
 
 		this.socket = null;
-	};
 
-	_exit() {
-		if(this !== null) {
-			this.leave(this.id, this.room);
-		}
+		return;
 	};
 
 	/**
@@ -50,17 +46,14 @@ module.exports = class Client {
 				this.socket = new Socket();
 				this.getPrivateUser(this.id, body => cb == null ? null : cb(body.user));
 				this.join(this.id, this.room);
-				process.on("exit", this._exit.bind(null));
-				process.on("SIGINT", this._exit.bind(null));
-				process.on("SIGUSR1", this._exit.bind(null));
-				process.on("SIGUSR2", this._exit.bind(null));
-				process.on("uncaughtException", this._exit.bind(null));
+				['beforeExit', 'uncaughtException', 'unhandledRejection', 'SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT','SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'].forEach(evt => process.on(evt, (code) => this._exitHandle(code, this.id, this.room)));
 			} else {
 				cb(new Error("Missing room parameter"));
 			}
 		} else {
 			cb(new Error("Missing id parameter"));
 		}
+		return;
 	};
 
 	/**
@@ -74,6 +67,7 @@ module.exports = class Client {
 			this.room = null;
 			this.socket.unload(() => cb == null ? null : cb());
 		});
+		return;
 	};
 
 	/**
@@ -83,6 +77,7 @@ module.exports = class Client {
 	 */
 	onMessage(room = this.room, cb = null) {
 		this.socket.onMessage(room, cb == null ? null : cb);
+		return;
 	};
 
 	/**
@@ -92,6 +87,7 @@ module.exports = class Client {
 	 */
 	onAdmin(room = this.room, cb = null) {
 		this.socket.onAdmin(room, cb == null ? null : cb);
+		return;
 	};
 
 	/**
@@ -114,6 +110,7 @@ module.exports = class Client {
 	 */
 	sendMessage(room = this.room, message, cb = null) {
 		Rest.sendMessage(this.id, room, message, cb == null ? null : cb);
+		return;
 	};
 
 	/**
@@ -123,6 +120,7 @@ module.exports = class Client {
 	 */
 	getPublicUser(name, cb = null) {
 		Rest.getPublicUser(name, cb == null ? null : cb);
+		return;
 	};
 
 	/**
@@ -132,6 +130,7 @@ module.exports = class Client {
 	 */
 	getPrivateUser(id = this.id, cb = null) {
 		Rest.getPrivateUser(id, cb == null ? null : cb);
+		return;
 	};
 
 	/**
@@ -142,6 +141,7 @@ module.exports = class Client {
 	 */
 	join(id = this.id, room = this.room, cb = null) {
 		Rest.join(id, room, cb == null ? null : cb);
+		return;
 	};
 
 	/**
@@ -152,6 +152,24 @@ module.exports = class Client {
 	 */
 	leave(id = this.id, room = this.room, cb = null) {
 		Rest.leave(id, room, cb == null ? null : cb);
+		return;
+	};
+
+	async _exitHandle(evtOrExitCodeOrError, id, room) {
+		try {
+			Rest.leave(id, room, () => {
+				if(typeof evtOrExitCodeOrError == "object") {
+					console.error(evtOrExitCodeOrError);
+				}
+				process.exit(isNaN(+evtOrExitCodeOrError) ? 1 : +evtOrExitCodeOrError);
+			});
+		} catch (e) {
+			console.error(e);
+			if(typeof evtOrExitCodeOrError == "object") {
+				console.error(evtOrExitCodeOrError);
+			}
+			process.exit(isNaN(+evtOrExitCodeOrError) ? 1 : +evtOrExitCodeOrError);
+		}
 	};
 
 };
