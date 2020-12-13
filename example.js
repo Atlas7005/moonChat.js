@@ -40,6 +40,18 @@ client.onAdmin("atlas", message => {
 	console.log(message);
 });
 
+// Leave event listener.
+// Callback returns the User object.
+client.onLeave("atlas", user => {
+	console.log(user);
+});
+
+// Join event listener.
+// Callback returns the User object.
+client.onJoin("atlas", user => {
+	console.log(user);
+});
+
 // Courtesy of Sam (8853650) - stackoverflow
 const intervals = [
 	{ label: 'year', seconds: 31536000 },
